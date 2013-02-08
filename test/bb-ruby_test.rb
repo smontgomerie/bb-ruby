@@ -5,6 +5,12 @@ require File.dirname(__FILE__) + '/test_helper.rb'
 
 class TestBBRuby < Test::Unit::TestCase
 
+  # removes whitespace and checks
+  def assert_equal_bb_code(bbcode, expected)
+    assert_equal bbcode.bbcode_to_html.gsub(/^\s+/, ""), expected.gsub(/^\s+/, "")
+  end
+
+
   def test_strong
     assert_equal '<strong>simple</strong>', '[b]simple[/b]'.bbcode_to_html
     assert_equal '<strong>simple</strong>', '[b:7a9ca2c5c3]simple[/b:7a9ca2c5c3]'.bbcode_to_html
@@ -257,3 +263,16 @@ class TestBBRuby < Test::Unit::TestCase
   end
 
 end
+  def test_nested_lists
+    bbcode = "[list]
+                [*]List Item 1
+                [list][*]Nested List Item[/list]
+              [/list]"
+
+    expected = "<ul><br />
+                <li>List Item 1<br />
+                </li><ul><li>Nested List Item</li></ul><br />
+                </ul>"
+
+    assert_equal_bb_code bbcode, expected
+  end
