@@ -105,6 +105,28 @@ class TestBBRuby < Test::Unit::TestCase
                  '[list:5d7cf5560a][*:5d7cf5560a]item1[*:5d7cf5560a]item2[/list:u:5d7cf5560a][list:5d7cf5560a][*:5d7cf5560a]item1[*:5d7cf5560a]item2[/list:u:5d7cf5560a]'.bbcode_to_html
   end
 
+  def test_nested_lists
+    bbcode = "[list]
+                [*]List Item 1
+                [list][*]Nested List Item[/list]
+              [/list]"
+
+    expected = "<ul><br />
+                <li>List Item 1<br />
+                </li><ul><li>Nested List Item</li></ul><br />
+                </ul>"
+
+    assert_equal_bb_code bbcode, expected
+  end
+
+  def test_center
+    bbcode = "[center]Title[/center]"
+
+    expected = "<center>Title</center>"
+
+    assert_equal_bb_code bbcode, expected
+  end
+
   def test_definition_list_term_definition
     assert_equal '<dl><dt>term 1</dt><dd>definition 1</dd><dt>term 2</dt><dd>definition 2</dd></dl>', '[dl][dt]term 1[/dt][dd]definition 1[/dd][dt]term 2[/dt][dd]definition 2[/dd][/dl]'.bbcode_to_html
   end
@@ -263,16 +285,3 @@ class TestBBRuby < Test::Unit::TestCase
   end
 
 end
-  def test_nested_lists
-    bbcode = "[list]
-                [*]List Item 1
-                [list][*]Nested List Item[/list]
-              [/list]"
-
-    expected = "<ul><br />
-                <li>List Item 1<br />
-                </li><ul><li>Nested List Item</li></ul><br />
-                </ul>"
-
-    assert_equal_bb_code bbcode, expected
-  end
