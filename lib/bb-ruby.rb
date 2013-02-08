@@ -87,11 +87,13 @@ module BBRuby
       '[*]list item',
       :listitem],
     'Unordered list (alternative)' => [
-      /\[list(:.*)?\]((?:(?!\[list(:.*)?\]).)*)\[\/list(:.)?\1?\]/mi,
-      '<ul>\2</ul>',
-      'Unordered list item',
-      '[list][*]item 1[*] item2[/list]',
-      :list],
+       # For properly nested BBCode tags, this regex ensures that inner tags are matched first
+       # i.e. the negative lookahead  (?!(\[\/?\1))  matches the opening tag (\1) prepended with [\/
+       /\[(list(:.*)?)\]((?:(?!(\[\/?\1)).)*)\[\/list(:.)?\2?\]/mi,
+       '<ul>\3</ul>',
+       'Unordered list item',
+       '[list][*]item 1[*] item2[/list]',
+       :list],
     'Ordered list (numerical)' => [
       /\[list=1(:.*)?\](.+)\[\/list(:.)?\1?\]/mi,
       '<ol>\2</ol>',
@@ -299,9 +301,19 @@ module BBRuby
       case method
       when :enable
         tags_definition.each_value { |t| text.gsub!(t[0], t[1]) if tags.include?(t[4]) }
+
+        # Parsing twice ensures we can do nested tags. Check if we have any more [tags] in our  markup
+        if text =~ /\[\w+\]/
+          tags_definition.each_value { |t| text.gsub!(t[0], t[1]) if tags.include?(t[4]) }
+        end
       when :disable
         # this works nicely because the default is disable and the default set of tags is [] (so none disabled) :)
         tags_definition.each_value { |t| text.gsub!(t[0], t[1]) unless tags.include?(t[4]) }
+
+        # Parsing twice ensures we can do nested tags. Check if we have any more [tags] in our  markup
+        if text =~ /\[\w+\]/
+          tags_definition.each_value { |t| text.gsub!(t[0], t[1]) unless tags.include?(t[4]) }
+        end
       end
 
       text
