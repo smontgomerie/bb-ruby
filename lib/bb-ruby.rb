@@ -137,7 +137,7 @@ module BBRuby
       "[quote]Now is the time...[/quote]",
       :quote],
     'Link' => [
-      /\[url=(?:&quot;)?(.*?)(?:&quot;)?\](.*?)\[\/url\]/mi,
+      /\[url=(?:&quot;|")?(.*?)(?:&quot;|")?\](.*?)\[\/url\]/mi,
       '<a href="\1">\2</a>',
       'Hyperlink to somewhere else',
       'Maybe try looking on [url=http://google.com]Google[/url]?',
