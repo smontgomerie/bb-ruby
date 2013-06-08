@@ -211,11 +211,11 @@ module BBRuby
       'Here\'s a wrapped image: [align=right][img]image.png[/img][/align]',
       :align],
     'Center' => [
-          /\[center(:.+)?\](.*?)\[\/center\1?\]/mi,
-          '<center>\2</center>',
-          'Center text',
-          '[center]title[/center]',
-          :center]
+      /\[center(:.+)?\](.*?)\[\/center\1?\]/mi,
+      '<center>\2</center>',
+      'Center text',
+      '[center]title[/center]',
+      :center],
   }
 
   class << self
